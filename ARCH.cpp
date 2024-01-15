@@ -44,6 +44,43 @@ void Read_File(string *path, Archive* Volume_Header, FILE_HEAD* Head_type)
     file.close();
     int bytes = 0;
     int k=0;
+        while (bytes<length)
+    {
+        Volume_Header->header_crc[0]=buff[bytes];
+        Volume_Header->header_crc[1]=buff[bytes+1];
+        Volume_Header->header_type=buff[bytes+2];
+        Volume_Header->header_flags[0]=buff[bytes+3];
+        Volume_Header->header_flags[1]=buff[bytes+4];
+        Volume_Header->header_size[0]=buff[bytes+5];
+        Volume_Header->header_size[1]=buff[bytes+6];
+        int razmer=(int)Volume_Header->header_size[0]+(int)Volume_Header->header_size[1];
+        if (Volume_Header->header_type==0x74)
+        {
+            int name_len=(int)buff[bytes+26]+(int)buff[bytes+27];
+            Head_type->PackSize[0]=buff[bytes+7];
+            Head_type->PackSize[1]=buff[bytes+8];
+            Head_type->PackSize[2]=buff[bytes+9];
+            Head_type->PackSize[3]=buff[bytes+10];
+            int size_of_packaged_data=(int)(Head_type->PackSize[0])+(int)(Head_type->PackSize[1])+(int)(Head_type->PackSize[2])+(int)(Head_type->PackSize[3]);
+            for (int i=1; i<=name_len; i++)
+            {
+                cout << buff[i+bytes+31];
+            }
+            cout << "\n";
+            bytes=bytes+razmer+size_of_packaged_data;
+            k+=1;
+            
+        }
+        else
+        {
+            bytes=bytes+razmer;
+        }
+        if (k==3)
+        {
+            break;
+        }
+    };
+    };
 };
 
 int main()
@@ -54,5 +91,5 @@ int main()
     Archive* OurRar = new Archive;
     FILE_HEAD* Header = new FILE_HEAD;
     string *get_path = &path;
-
+    Read_File(get_path,OurRar,Header);
 }
