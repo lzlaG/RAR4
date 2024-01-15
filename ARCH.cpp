@@ -26,7 +26,25 @@ struct FILE_HEAD
     char FileAttr[4];
 };
 
-
+void Read_File(string *path, Archive* Volume_Header, FILE_HEAD* Head_type)
+{
+    ifstream file(*path,ios::binary);
+    if (!file)
+    {
+        cout << "Файл не открылся, ошибка" << "\n";
+    }
+    else
+    {
+    cout << "Файл успешно открылся" << "\n";
+    file.seekg(0, ios::end);
+    int length=file.tellg();
+    file.seekg(0, ios::beg);
+    unsigned char* buff = new unsigned char[length];
+    file.read((char*)buff, length);
+    file.close();
+    int bytes = 0;
+    int k=0;
+};
 
 int main()
 {
